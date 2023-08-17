@@ -1,0 +1,16 @@
+a {
+    text-decoration: none !important;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    margin: 5px 0;
+}
+
+img.ft-pay {
+    width: 46px;
+    height: 29px;
+}

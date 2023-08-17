@@ -1,0 +1,10 @@
+.homepage {
+    background: url("../../assets/images/638252324817743038_desk-header-bg.webp");
+    background-size: 100% auto;
+    background-color: rgb(245, 59, 34);
+}
+
+.second-nav-bar a:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
