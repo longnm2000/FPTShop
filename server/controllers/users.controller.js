@@ -1,4 +1,3 @@
-const db = require("../utils/database");
 const usersService = require("../services/users.service");
 
 module.exports.findAll = async (req, res) => {

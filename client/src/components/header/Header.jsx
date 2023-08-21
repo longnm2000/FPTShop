@@ -7,11 +7,28 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import "./Header.css";
-
+import jwt_decode from "jwt-decode";
 import { Link, NavLink } from "react-router-dom";
 
 function Header() {
   let expand = "xl";
+  let decoded = null;
+  let truncatedString;
+  let maxLength = 6;
+  if (localStorage.getItem("token")) {
+    decoded = jwt_decode(localStorage.getItem("token"));
+    truncatedString =
+      decoded.data.name.length > maxLength
+        ? decoded.data.name.substring(0, maxLength) + "..."
+        : decoded.data.name;
+  }
+
+  const handleExit = (check) => {
+    if (check !== null) {
+      localStorage.removeItem("token");
+    }
+  };
+
   return (
     <Navbar key={expand} expand={expand} className="header">
       <Container>
@@ -58,7 +75,7 @@ function Header() {
               <NavLink to={"/"} className="nav-link">
                 <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
                   <i
-                    class="fa-solid fa-file-invoice-dollar"
+                    className="fa-solid fa-file-invoice-dollar"
                     style={{ color: "#ffffff" }}
                   ></i>
                   <span className="m-0 text-white">Thanh toán & tiện ích</span>
@@ -67,17 +84,25 @@ function Header() {
               <NavLink to={"/cart"} className="nav-link">
                 <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
                   <i
-                    class="fa-solid fa-cart-shopping"
+                    className="fa-solid fa-cart-shopping"
                     style={{ color: "#ffffff" }}
                   ></i>
                   <span className="m-0 text-white">Giỏ hàng</span>
                 </div>
               </NavLink>
 
-              <NavLink to={"/login"} className="nav-link">
+              <NavLink
+                to={"/login"}
+                className="nav-link"
+                onClick={() => handleExit(decoded)}
+              >
                 <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
-                  <i class="fa-solid fa-user" style={{ color: "#ffffff" }}></i>
-                  <span className="m-0 text-white">Tài khoản</span>
+                  <i className="fa-solid fa-user" style={{ color: "#ffffff" }}>
+                    {decoded !== null ? <span> {truncatedString}</span> : ""}
+                  </i>
+                  <span className="m-0 text-white">
+                    {decoded !== null ? "Đăng xuất" : "Tài khoản"}
+                  </span>
                 </div>
               </NavLink>
             </Nav>

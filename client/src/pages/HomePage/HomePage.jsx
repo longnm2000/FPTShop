@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../../assets/images/638259858145408752_desk-header.webp";
 import { Col, Container, Row } from "react-bootstrap";
 import "./HomePage.css";
@@ -18,8 +18,36 @@ import Screen from "../../assets/images/icon-screen.webp";
 import SecondHand from "../../assets//images/icon-tcdm.webp";
 import { Link } from "react-router-dom";
 import PhoneCard from "../../components/PhoneCard/PhoneCard";
+import axios from "axios";
 
 function HomePage() {
+  const [data, setData] = useState([]);
+  const [images, setImages] = useState([]);
+  const fetchImages = async () => {
+    await axios
+      .get(`http://localhost:8000/api/v1/smartphones/all-images/`)
+      .then((res) => setImages(res.data))
+      .catch((err) => console.log(err));
+  };
+  const fetchData = () => {
+    axios
+      .get(`http://localhost:8000/api/v1/smartphones/`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    fetchData();
+    fetchImages();
+  }, []);
+
+  const findImg = (product) => {
+    if (images) {
+      const findImage = images.find((e) => e.smartphone_id === product);
+      return findImage;
+    }
+  };
   return (
     <div className="homepage pb-4">
       <Helmet>
@@ -302,30 +330,14 @@ function HomePage() {
             </Link>
           </div>
           <Row xs={1} sm={2} lg={3} xl={4} className="p-2">
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
-            <Col className="mt-3">
-              <PhoneCard />
-            </Col>
+            {data?.map((e, i) => (
+              <Col key={i} className="mt-3">
+                <PhoneCard
+                  smartphone={e}
+                  image={findImg(e.smartphone_id)?.image_url}
+                />
+              </Col>
+            ))}
           </Row>
         </div>
 

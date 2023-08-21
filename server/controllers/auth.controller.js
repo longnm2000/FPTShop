@@ -1,14 +1,31 @@
+const moment = require("moment");
 const authService = require("../services/auth.service");
 module.exports.signup = async (req, res) => {
-  let { email, password } = req.body;
+  let { name, birthday, gender, phone, email, password } = req.body;
+  console.log(birthday);
+  const formattedBirthday = moment(birthday, "YYYY-MM-DDTHH:mm:ss.SSSZ").format(
+    "YYYY-MM-DD"
+  );
+  console.log(name, formattedBirthday, +gender, phone, email, password);
   try {
-    await authService.signup(email, password);
-    res.json({
+    await authService.signup(
+      name,
+      formattedBirthday,
+      gender,
+      phone,
+      email,
+      password
+    );
+    res.status(201).json({
       message: "Sign up successfully",
+      status: 201,
     });
   } catch (error) {
+    console.error("Error while signing up:", error);
     res.json({
-      error,
+      message: "Failed to sign up",
+      error: error.message,
+      status: 500,
     });
   }
 };
@@ -20,7 +37,9 @@ module.exports.signin = async (req, res) => {
     res.json(result);
   } catch (error) {
     res.json({
-      error,
+      message: "Failed to sign in",
+      error: error.message,
+      status: 500,
     });
   }
 };

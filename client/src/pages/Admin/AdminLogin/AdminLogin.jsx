@@ -3,7 +3,6 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
-import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
@@ -25,7 +24,7 @@ const schema = yup.object().shape({
   password: yup.string().required("Mật khẩu không được để trống"),
 });
 
-function LoginPage() {
+function AdminLogin() {
   const navigate = useNavigate();
   const {
     control,
@@ -96,7 +95,7 @@ function LoginPage() {
         className="mx-auto border p-4 login-form rounded my-5"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h3 className="text-center">Đăng Nhập</h3>
+        <h3 className="text-center">Admin</h3>
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Controller
@@ -171,4 +170,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default AdminLogin;
