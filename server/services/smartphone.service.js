@@ -39,13 +39,9 @@ LIMIT 2;
 module.exports.findAll = () => {
   return db.execute(`
   SELECT DISTINCT
-    s.smartphone_id,
+    s.*,
     s.smartphone_name,
     b.brand_name,
-    s.chipset_info,
-    s.ram_info,
-    s.screen_info,
-    s.release_date,
     so.price AS lowest_price,
     st.storage_capacity AS lowest_storage
 FROM
@@ -152,5 +148,58 @@ JOIN storage_options AS so ON sso.storage_id = so.storage_id
 WHERE sso.smartphone_id = ?;
 `,
     [id]
+  );
+};
+
+module.exports.remove = (id) => {
+  return db.execute(
+    "DELETE FROM `db_fpt`.`smartphones` WHERE (`smartphone_id` = ?)",
+    [id]
+  );
+};
+
+module.exports.findAllBrands = () => {
+  return db.execute("SELECT * FROM brands");
+};
+
+module.exports.create = (
+  smartphone_name,
+  release_date,
+  description,
+  brand_id,
+  chipset_info,
+  main_camera_info,
+  selfie_camera_info,
+  screen_info,
+  battery_info,
+  charging_info,
+  sim_info,
+  ram_info,
+  os_info
+) => {
+  return db.execute(
+    "INSERT INTO `db_fpt`.`smartphones` (`smartphone_name`, `release_date`, `description`, `brand_id`, `chipset_info`, `main_camera_info`, `selfie_camera_info`, `screen_info`, `battery_info`, `charging_info`, `sim_info`, `ram_info`, `os_info`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)",
+    [
+      smartphone_name,
+      release_date,
+      description,
+      brand_id,
+      chipset_info,
+      main_camera_info,
+      selfie_camera_info,
+      screen_info,
+      battery_info,
+      charging_info,
+      sim_info,
+      ram_info,
+      os_info,
+    ]
+  );
+};
+
+module.exports.update = () => {
+  return db.execute(
+    "UPDATE `db_fpt`.`smartphones` SET `smartphone_name` = ?, `release_date` = ?, `description` = ?, `brand_id` = ?, `chipset_info` = ?, `main_camera_info` = ?, `selfie_camera_info` = ?, `screen_info` = ?, `battery_info` = ?, `charging_info` = ?, `sim_info` = ?, `ram_info` = ?, `os_info` = ? WHERE (`smartphone_id` = ?)",
+    []
   );
 };

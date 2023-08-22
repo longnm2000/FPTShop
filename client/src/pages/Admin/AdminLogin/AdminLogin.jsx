@@ -43,17 +43,17 @@ function AdminLogin() {
   const onSubmit = (data) => {
     try {
       axios
-        .post("http://localhost:8000/api/v1/auth/signin", data)
+        .post("http://localhost:8000/api/v1/auth//admin/sign-in-admin", data)
         .then((res) => {
           console.log(res.data);
           if (res.data.status === 200) {
-            localStorage.setItem("token", res.data.access_token);
+            localStorage.setItem("admin_token", res.data.access_token);
             Swal.fire({
               icon: "success",
               title: "Đăng nhập thành công!",
               text: "Tự động chuyển về trang chủ",
               timer: 1000,
-            }).then(navigate("/"));
+            }).then(navigate("/admin/users"));
           }
           if (res.data.status === 401) {
             Swal.fire({

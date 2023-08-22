@@ -9,6 +9,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import "./Header.css";
 import jwt_decode from "jwt-decode";
 import { Link, NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Header() {
   let expand = "xl";
@@ -26,6 +27,11 @@ function Header() {
   const handleExit = (check) => {
     if (check !== null) {
       localStorage.removeItem("token");
+      Swal.fire({
+        icon: "success",
+        title: "Đăng xuất thành công",
+        timer: 2000,
+      });
     }
   };
 
@@ -90,21 +96,37 @@ function Header() {
                   <span className="m-0 text-white">Giỏ hàng</span>
                 </div>
               </NavLink>
-
-              <NavLink
-                to={"/login"}
-                className="nav-link"
-                onClick={() => handleExit(decoded)}
-              >
-                <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
-                  <i className="fa-solid fa-user" style={{ color: "#ffffff" }}>
-                    {decoded !== null ? <span> {truncatedString}</span> : ""}
-                  </i>
-                  <span className="m-0 text-white">
-                    {decoded !== null ? "Đăng xuất" : "Tài khoản"}
-                  </span>
-                </div>
-              </NavLink>
+              {decoded !== null ? (
+                <NavLink
+                  to={"/"}
+                  className="nav-link"
+                  onClick={() => handleExit(decoded)}
+                >
+                  <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ color: "#ffffff" }}
+                    >
+                      <span> {truncatedString}</span>
+                    </i>
+                    <span className="m-0 text-white">Đăng xuất</span>
+                  </div>
+                </NavLink>
+              ) : (
+                <NavLink
+                  to={"/login"}
+                  className="nav-link"
+                  onClick={() => handleExit(decoded)}
+                >
+                  <div className="d-flex gap-1 flex-xl-column justify-content-center align-items-center">
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ color: "#ffffff" }}
+                    ></i>
+                    <span className="m-0 text-white">Tài khoản</span>
+                  </div>
+                </NavLink>
+              )}
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>

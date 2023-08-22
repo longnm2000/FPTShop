@@ -1,5 +1,6 @@
 const usersService = require("../services/users.service");
 const smartphoneService = require("../services/smartphone.service");
+const moment = require("moment");
 
 module.exports.findAllLimit = async (req, res) => {
   try {
@@ -100,14 +101,78 @@ module.exports.remove = async (req, res) => {
   let { id } = req.params;
 
   try {
-    await usersService.remove(+id);
-    res.json({
+    await smartphoneService.remove(+id);
+    res.status(200).json({
       status: "success",
-      message: `Delete architect with id = ${id} successfully`,
+      message: `Delete smartphone with id = ${id} successfully`,
     });
   } catch (error) {
     res.json({
       error,
     });
+  }
+};
+
+module.exports.findAllBrands = async (req, res) => {
+  try {
+    const [results] = await smartphoneService.findAllBrands();
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.create = async (req, res) => {
+  let {
+    battery,
+    brand,
+    charge,
+    cpu,
+    description,
+    mainCamera,
+    name,
+    os,
+    ram,
+    releaseDate,
+    screen,
+    selfieCamera,
+    sim,
+  } = req.body;
+  console.log(
+    battery,
+    brand,
+    charge,
+    cpu,
+    description,
+    mainCamera,
+    name,
+    os,
+    ram,
+    moment(releaseDate).format("YYYY-MM-DD"),
+    screen,
+    selfieCamera,
+    sim
+  );
+  try {
+    const [results] = await smartphoneService.create(
+      name,
+      moment(releaseDate).format("YYYY-MM-DD"),
+      description,
+      brand,
+      cpu,
+      mainCamera,
+      selfieCamera,
+      screen,
+      battery,
+      charge,
+      sim,
+      ram,
+      os
+    );
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -5,6 +5,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
 import Swal from "sweetalert2";
+import jwtDecode from "jwt-decode";
+import numeral from "numeral";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
 
 function DetailPage() {
   const navigate = useNavigate();
@@ -39,6 +43,10 @@ function DetailPage() {
   }, []);
   if (data?.message === "User not found") {
     navigate("/*");
+  }
+  let decoded = null;
+  if (localStorage.getItem("token")) {
+    decoded = jwtDecode(localStorage.getItem("token"));
   }
   const handleToggleDescription = () => {
     setShowFullDescription((prevValue) => !prevValue);
@@ -118,8 +126,9 @@ function DetailPage() {
     ) {
       if (localStorage.getItem("token")) {
         const cartItem = {
-          id: +id,
-          name: data.smartphone_name,
+          smartphoneId: +id,
+          userId: decoded.data.id,
+          smartphoneName: data.smartphone_name,
           color_id: selectedOption.color_id,
           color: selectedOption.color_name,
           storage_id: selectedOption.storage_id,
@@ -174,7 +183,8 @@ function DetailPage() {
   };
 
   return (
-    <div>
+    <>
+      <Header />
       <Container>
         <Breadcrumb className="pt-3">
           <Link className="breadcrumb-item" to={"/"}>
@@ -183,8 +193,8 @@ function DetailPage() {
           <Link className="breadcrumb-item" to={"/smartphone"}>
             Điện thoại
           </Link>
-          <Link className="breadcrumb-item active" to={"/smartphone"}>
-            Điện thoại
+          <Link className="breadcrumb-item active" to={`/smartphone/${id}`}>
+            {data?.smartphone_name}
           </Link>
         </Breadcrumb>
         <h3>{data?.smartphone_name}</h3>
@@ -240,7 +250,10 @@ function DetailPage() {
                 onClick={handleAddToCart}
               >
                 Thêm vào giỏ hàng -{" "}
-                {selectedOption?.price ? selectedOption.price : 0}₫
+                {selectedOption?.price
+                  ? numeral(selectedOption.price).format("0,")
+                  : 0}
+                ₫
               </button>
             </div>
           </Col>
@@ -310,7 +323,8 @@ function DetailPage() {
           </Col>
         </Row>
       </Container>
-    </div>
+      <Footer />
+    </>
   );
 }
 

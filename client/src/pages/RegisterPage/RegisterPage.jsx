@@ -10,6 +10,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
 
 const schema = yup.object().shape({
   email: yup
@@ -69,19 +71,22 @@ function RegisterPage() {
   };
 
   const onSubmit = (data) => {
-    console.log(data); // You can handle the form data here
+    console.log(data);
 
     try {
       axios
-        .post("http://localhost:8000/api/v1/auth/signup", data)
+        .post("http://localhost:8000/api/v1/auth/signup", {
+          ...data,
+          is_login: 0,
+        })
         .then((res) => {
           if (res.status === 201) {
             Swal.fire({
               icon: "success",
               title: "Đăng nhập thành công!",
-              text: "Tự động chuyển về trang chủ",
+              text: "Tự động chuyển về trang đăng nhập",
               timer: 1000,
-            }).then(navigate("/"));
+            }).then(navigate("/login"));
           }
         })
         .catch((err) => console.log(err));
@@ -90,129 +95,135 @@ function RegisterPage() {
     }
   };
   return (
-    <Container>
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        className="register-form mx-auto border p-4 login-form rounded my-5"
-      >
-        <h3 className="text-center">Đăng ký</h3>
-        <Form.Group className="mb-3">
-          <Form.Label className="register-label">Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Nhập email"
-            {...register("email")}
-          />
-          {errors.email && (
-            <Form.Text className="text-danger">
-              {errors.email.message}
-            </Form.Text>
-          )}
-        </Form.Group>
-
-        <Form.Label className="register-label">Mật khẩu</Form.Label>
-        <InputGroup>
-          <Form.Control
-            type={toggleType}
-            placeholder="Mật khẩu"
-            className="pe-5"
-            {...register("password")}
-          />
-          <Button
-            onClick={handleChangeType}
-            variant="outline-secondary"
-            id="button-addon2"
-          >
-            {toggleType === "text" ? (
-              <i className="fa-solid fa-eye"></i>
-            ) : (
-              <i className="fa-solid fa-eye-slash"></i>
+    <>
+      <Header />
+      <Container>
+        <Form
+          onSubmit={handleSubmit(onSubmit)}
+          className="register-form mx-auto border p-4 login-form rounded my-5"
+        >
+          <h3 className="text-center">Đăng ký</h3>
+          <Form.Group className="mb-3">
+            <Form.Label className="register-label">Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Nhập email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <Form.Text className="text-danger">
+                {errors.email.message}
+              </Form.Text>
             )}
-          </Button>
-        </InputGroup>
-        {errors.password && (
-          <Form.Text className="text-danger">
-            {errors.password.message}
-          </Form.Text>
-        )}
+          </Form.Group>
 
-        <Form.Group className="my-3">
-          <Form.Label className="register-label">Họ tên</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Họ tên"
-            {...register("name")}
-          />
-          {errors.name && (
-            <Form.Text className="text-danger">{errors.name.message}</Form.Text>
-          )}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label className="register-label">Ngày sinh</Form.Label>
-          <Form.Control type="date" {...register("birthday")} />
-          {errors.birthday && (
+          <Form.Label className="register-label">Mật khẩu</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type={toggleType}
+              placeholder="Mật khẩu"
+              className="pe-5"
+              {...register("password")}
+            />
+            <Button
+              onClick={handleChangeType}
+              variant="outline-secondary"
+              id="button-addon2"
+            >
+              {toggleType === "text" ? (
+                <i className="fa-solid fa-eye"></i>
+              ) : (
+                <i className="fa-solid fa-eye-slash"></i>
+              )}
+            </Button>
+          </InputGroup>
+          {errors.password && (
             <Form.Text className="text-danger">
-              {errors.birthday.message}
+              {errors.password.message}
             </Form.Text>
           )}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label className="register-label">Giới tính</Form.Label>
-          <br />
-          <Form.Check
-            inline
-            label="Nam"
-            name="gender"
-            type="radio"
-            value="0"
-            {...register("gender")}
-          />
-          <Form.Check
-            inline
-            label="Nữ"
-            name="gender"
-            type="radio"
-            value="1"
-            {...register("gender")}
-          />
-          <Form.Check
-            inline
-            label="Khác"
-            name="gender"
-            type="radio"
-            value="2"
-            {...register("gender")}
-          />
-          {errors.gender && (
-            <Form.Text className="text-danger">
-              {errors.gender.message}
-            </Form.Text>
-          )}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label className="register-label">Số điện thoại</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Số điện thoại"
-            {...register("phone")}
-          />
-          {errors.phone && (
-            <Form.Text className="text-danger">
-              {errors.phone.message}
-            </Form.Text>
-          )}
-        </Form.Group>
-        <p>
-          <span className="register-label"></span> Bắt buộc
-        </p>
-        <Button className="w-100" variant="primary" type="submit">
-          Đăng ký
-        </Button>
-        <p className="my-3 text-center">
-          Đã có tài khoản? <Link to={"/login"}>Đăng nhập</Link>
-        </p>
-      </Form>
-    </Container>
+
+          <Form.Group className="my-3">
+            <Form.Label className="register-label">Họ tên</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Họ tên"
+              {...register("name")}
+            />
+            {errors.name && (
+              <Form.Text className="text-danger">
+                {errors.name.message}
+              </Form.Text>
+            )}
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="register-label">Ngày sinh</Form.Label>
+            <Form.Control type="date" {...register("birthday")} />
+            {errors.birthday && (
+              <Form.Text className="text-danger">
+                {errors.birthday.message}
+              </Form.Text>
+            )}
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="register-label">Giới tính</Form.Label>
+            <br />
+            <Form.Check
+              inline
+              label="Nam"
+              name="gender"
+              type="radio"
+              value="0"
+              {...register("gender")}
+            />
+            <Form.Check
+              inline
+              label="Nữ"
+              name="gender"
+              type="radio"
+              value="1"
+              {...register("gender")}
+            />
+            <Form.Check
+              inline
+              label="Khác"
+              name="gender"
+              type="radio"
+              value="2"
+              {...register("gender")}
+            />
+            {errors.gender && (
+              <Form.Text className="text-danger">
+                {errors.gender.message}
+              </Form.Text>
+            )}
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="register-label">Số điện thoại</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Số điện thoại"
+              {...register("phone")}
+            />
+            {errors.phone && (
+              <Form.Text className="text-danger">
+                {errors.phone.message}
+              </Form.Text>
+            )}
+          </Form.Group>
+          <p>
+            <span className="register-label"></span> Bắt buộc
+          </p>
+          <Button className="w-100" variant="primary" type="submit">
+            Đăng ký
+          </Button>
+          <p className="my-3 text-center">
+            Đã có tài khoản? <Link to={"/login"}>Đăng nhập</Link>
+          </p>
+        </Form>
+      </Container>
+      <Footer />
+    </>
   );
 }
 

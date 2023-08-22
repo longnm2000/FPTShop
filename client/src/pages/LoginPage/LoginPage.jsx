@@ -10,6 +10,8 @@ import Form from "react-bootstrap/Form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
 
 const schema = yup.object().shape({
   email: yup
@@ -55,23 +57,27 @@ function LoginPage() {
               text: "Tự động chuyển về trang chủ",
               timer: 1000,
             }).then(navigate("/"));
-          }
-          if (res.data.status === 401) {
+          } else if (res.data.status === 201) {
+            Swal.fire({
+              icon: "error",
+              title: "Tài khoản đã bị khóa!",
+
+              timer: 1000,
+            });
+          } else if (res.data.status === 401) {
             Swal.fire({
               icon: "error",
               title: "Mật khẩu không chính xác!",
 
               timer: 1000,
             });
-          }
-          if (res.data.status === 404) {
+          } else if (res.data.status === 404) {
             Swal.fire({
               icon: "error",
               title: "Email không tồn tại!",
               timer: 1000,
             });
-          }
-          if (res.data.status === 500) {
+          } else if (res.data.status === 500) {
             Swal.fire({
               icon: "error",
               title: "Internal server error!",
@@ -91,83 +97,87 @@ function LoginPage() {
   };
 
   return (
-    <Container>
-      <Form
-        className="mx-auto border p-4 login-form rounded my-5"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <h3 className="text-center">Đăng Nhập</h3>
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Form.Control
-                {...field}
-                type="text"
-                placeholder="Email"
-                autoFocus
-              />
+    <>
+      <Header />
+      <Container>
+        <Form
+          className="mx-auto border p-4 login-form rounded my-5"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <h3 className="text-center">Đăng Nhập</h3>
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  type="text"
+                  placeholder="Email"
+                  autoFocus
+                />
+              )}
+            />
+            {errors.email && (
+              <p className="alert alert-danger mt-3" role="alert">
+                {errors.email.message}
+              </p>
             )}
-          />
-          {errors.email && (
+          </Form.Group>
+          <Form.Label>Mật khẩu</Form.Label>
+          <InputGroup className="mb-3">
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  type={toggleType}
+                  placeholder="Mật khẩu"
+                  className="pe-5"
+                />
+              )}
+            />
+            <Button
+              onClick={handleChangeType}
+              variant="outline-secondary"
+              id="button-addon2"
+            >
+              {toggleType === "text" ? (
+                <i className="fa-solid fa-eye"></i>
+              ) : (
+                <i className="fa-solid fa-eye-slash"></i>
+              )}
+            </Button>
+          </InputGroup>
+          {errors.password && (
             <p className="alert alert-danger mt-3" role="alert">
-              {errors.email.message}
+              {errors.password.message}
             </p>
           )}
-        </Form.Group>
-        <Form.Label>Mật khẩu</Form.Label>
-        <InputGroup className="mb-3">
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Form.Control
-                {...field}
-                type={toggleType}
-                placeholder="Mật khẩu"
-                className="pe-5"
-              />
-            )}
-          />
-          <Button
-            onClick={handleChangeType}
-            variant="outline-secondary"
-            id="button-addon2"
-          >
-            {toggleType === "text" ? (
-              <i className="fa-solid fa-eye"></i>
-            ) : (
-              <i className="fa-solid fa-eye-slash"></i>
-            )}
+          <Button variant="primary" type="submit" className="w-100">
+            Đăng nhập
           </Button>
-        </InputGroup>
-        {errors.password && (
-          <p className="alert alert-danger mt-3" role="alert">
-            {errors.password.message}
+          <p className="my-3 text-center">
+            Chưa có tài khoản? <Link to={"/register"}>Đăng ký</Link>
           </p>
-        )}
-        <Button variant="primary" type="submit" className="w-100">
-          Đăng nhập
-        </Button>
-        <p className="my-3 text-center">
-          Chưa có tài khoản? <Link to={"/register"}>Đăng ký</Link>
-        </p>
-        <p className="text-center my-3 fw-bold fs-5">Hoặc đăng nhập với</p>
-        <div className="d-flex justify-content-center gap-2">
-          <Button variant="dark w-50">
-            <i className="fab fa-google"></i> Google
-          </Button>
-          <Button variant="dark w-50">
-            <i className="fab fa-facebook-f" style={{ color: "#fff" }}></i>
-            Facebook
-          </Button>
-        </div>
-      </Form>
-    </Container>
+          <p className="text-center my-3 fw-bold fs-5">Hoặc đăng nhập với</p>
+          <div className="d-flex justify-content-center gap-2">
+            <Button variant="dark w-50">
+              <i className="fab fa-google"></i> Google
+            </Button>
+            <Button variant="dark w-50">
+              <i className="fab fa-facebook-f" style={{ color: "#fff" }}></i>
+              Facebook
+            </Button>
+          </div>
+        </Form>
+      </Container>
+      <Footer />
+    </>
   );
 }
 

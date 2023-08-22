@@ -13,6 +13,7 @@ const port = process.env.PORT;
 const userRoutes = require("./routes/users.routes");
 const authRoutes = require("./routes/auth.routes");
 const smartphonesRoutes = require("./routes/smartphones.routes");
+const orderRoutes = require("./routes/order.routes");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,6 +23,7 @@ app.use(cors());
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/smartphones", smartphonesRoutes);
+app.use("/api/v1/orders", orderRoutes);
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });

@@ -12,10 +12,26 @@ module.exports.findOneByEmail = (email) => {
   return db.execute("SELECT * FROM users WHERE email = ?", [email]);
 };
 
-module.exports.create = (name, birthday, gender, phone, email, password) => {
+module.exports.create = (
+  name,
+  birthday,
+  gender,
+  phone,
+  email,
+  password,
+  is_login
+) => {
   return db.execute(
-    "INSERT INTO users(name, birthday, gender, phone, email, password) VALUES(?,?,?,?,?,?)",
-    [name, birthday, gender, phone, email, password]
+    "INSERT INTO users(name, birthday, gender, phone, email, password,is_login) VALUES(?,?,?,?,?,?,?)",
+    [name, birthday, gender, phone, email, password, is_login]
+  );
+};
+
+module.exports.update = (userId, isLogin) => {
+  console.log(userId, isLogin);
+  return db.execute(
+    "UPDATE `db_fpt`.`users` SET `is_login` = ? WHERE (`user_id` = ?)",
+    [isLogin, userId]
   );
 };
 

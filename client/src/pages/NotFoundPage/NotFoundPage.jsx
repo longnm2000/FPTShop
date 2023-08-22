@@ -1,10 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
 
 function NotFoundPage() {
   return (
-    <div>
+    <>
+      <Header />
       <h2 className="text-center">Whoop! 404 Page Not Found</h2>
       <img
         src="https://fptshop.com.vn/Content/v4/error/images/logo.png"
@@ -22,7 +25,8 @@ function NotFoundPage() {
       <Link to={"/"}>
         <Button className="d-block mx-auto mb-3">Quay về trang chủ</Button>
       </Link>
-    </div>
+      <Footer />
+    </>
   );
 }
 

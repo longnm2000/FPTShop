@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
+import numeral from "numeral";
 
 function PhoneCard({ smartphone, image }) {
   return (
@@ -16,7 +17,9 @@ function PhoneCard({ smartphone, image }) {
         />
         <Card.Body>
           <Card.Title>{smartphone?.smartphone_name}</Card.Title>
-          <p className="text-danger fw-bold">{smartphone?.lowest_price} đ</p>
+          <p className="text-danger fw-bold">
+            {numeral(smartphone?.lowest_price).format("0,")} đ
+          </p>
           <div>
             <p>
               <i className="fa-solid fa-microchip"></i>{" "}

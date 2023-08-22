@@ -1,25 +1,31 @@
 const jwt = require("jsonwebtoken");
-const usersService = require("../services/users.service");
+const adminService = require("../services/admin.service");
+
 module.exports.isAuth = async (req, res, next) => {
   try {
-    let token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(" ")[1];
 
-    let result = jwt.verify(token, process.env.TOKEN_SECRET);
+    try {
+      const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      const { id } = decodedToken.data;
 
-    let { id } = result.data;
+      const user = await adminService.findOne(id);
 
-    let user = await usersService.findOne(id);
-
-    if (user) {
-      next();
-    } else {
-      res.json({
-        message: "Unauthorized",
+      if (user) {
+        next();
+      } else {
+        res.status(401).json({
+          error: "User not found",
+        });
+      }
+    } catch (jwtError) {
+      res.status(401).json({
+        error: "Authentication failed",
       });
     }
   } catch (error) {
-    res.json({
-      error,
+    res.status(500).json({
+      error: "Internal server error",
     });
   }
 };

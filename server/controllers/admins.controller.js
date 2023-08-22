@@ -1,8 +1,8 @@
-const usersService = require("../services/users.service");
+const adminService = require("../services/users.service");
 
 module.exports.findAll = async (req, res) => {
   try {
-    let data = await usersService.findAll();
+    let data = await adminService.findAll();
     let [rows] = data;
 
     res.json({
@@ -19,11 +19,11 @@ module.exports.findAll = async (req, res) => {
 module.exports.findOne = async (req, res) => {
   let { id } = req.params;
   try {
-    let data = await usersService.findOne(id);
+    let data = await adminService.findOne(id);
     let [rows] = data;
     if (rows.length === 0) {
       res.json({
-        message: "User not found",
+        message: "Admin not found",
       });
     } else {
       res.json(rows[0]);
@@ -37,10 +37,9 @@ module.exports.findOne = async (req, res) => {
 
 module.exports.create = async (req, res) => {
   let { email, password } = req.body;
-  // validate email, password
 
   try {
-    await usersService.create(email, password);
+    await adminService.create(email, password);
     res.json({
       message: "Create user successfully",
     });
@@ -51,27 +50,17 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.update = async (req, res) => {
-  let { id } = req.params;
-  let { isLogin } = req.body;
-  console.log(id, isLogin);
-  try {
-    await usersService.update(+id, +isLogin);
-    res.json({
-      message: "Update status login successfully",
-    });
-  } catch (error) {
-    res.json({
-      error,
-    });
-  }
+module.exports.update = (req, res) => {
+  res.json({
+    message: "Update user successfully",
+  });
 };
 
 module.exports.remove = async (req, res) => {
   let { id } = req.params;
 
   try {
-    await usersService.remove(+id);
+    await adminService.remove(+id);
     res.json({
       status: "success",
       message: `Delete architect with id = ${id} successfully`,

@@ -7,6 +7,8 @@ import axios from "axios";
 import "./SmartphonePage.css";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Link } from "react-router-dom";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
 
 function SmartphonePage() {
   const [data, setData] = useState([]);
@@ -63,95 +65,101 @@ function SmartphonePage() {
   const findImg = (product) => {
     if (images) {
       const findImage = images.find((e) => e.smartphone_id === product);
-      console.log(findImage);
       return findImage;
     }
   };
   return (
-    <div className="smartphone-page">
-      <Container>
-        <Breadcrumb className="pt-3">
-          <Link className="breadcrumb-item" to={"/"}>
-            Trang chủ
-          </Link>
-          <Link className="breadcrumb-item active" to={"/smartphone"}>
-            Điện thoại
-          </Link>
-        </Breadcrumb>
-        <Row className="pt-2 pb-3">
-          <Col sm={3} className="filter-col">
-            <div className="position-sticky fixed-top mb-3">
-              <Card className="filter-card border-0">
-                <Card.Body>
-                  <h5 className="card-title filter-header">
-                    Nhãn hiệu điện thoại
-                  </h5>
-                  <Form>
-                    <div className="mb-3">
-                      {data?.map((item, i) => (
+    <>
+      {" "}
+      <Header />
+      <div className="smartphone-page">
+        <Container>
+          <Breadcrumb className="pt-3">
+            <Link className="breadcrumb-item" to={"/"}>
+              Trang chủ
+            </Link>
+            <Link className="breadcrumb-item active" to={"/smartphone"}>
+              Điện thoại
+            </Link>
+          </Breadcrumb>
+          <Row className="pt-2 pb-3">
+            <Col sm={3} className="filter-col">
+              <div className="position-sticky fixed-top mb-3">
+                <Card className="filter-card border-0">
+                  <Card.Body>
+                    <h5 className="card-title filter-header">
+                      Nhãn hiệu điện thoại
+                    </h5>
+                    <Form>
+                      <div className="mb-3">
+                        {data?.map((item, i) => (
+                          <Form.Check
+                            key={i}
+                            label={item.brand_name}
+                            value={item.brand_name}
+                            type="checkbox"
+                            className="mb-2"
+                            onChange={handleBrandCheckboxChange}
+                          />
+                        ))}
+                      </div>
+                    </Form>
+                  </Card.Body>
+                </Card>
+                <Card className="filter-card border-0">
+                  <Card.Body>
+                    <h5 className="card-title filter-header">
+                      Sắp xếp theo giá
+                    </h5>
+                    <Form>
+                      <div className="mb-3">
                         <Form.Check
-                          key={i}
-                          label={item.brand_name}
-                          value={item.brand_name}
-                          type="checkbox"
+                          label="Giá tăng dần"
+                          type="radio"
+                          name="sortPrice"
+                          value="asc"
                           className="mb-2"
-                          onChange={handleBrandCheckboxChange}
+                          onChange={(e) => setSortByPrice(e.target.value)}
                         />
-                      ))}
-                    </div>
-                  </Form>
-                </Card.Body>
-              </Card>
-              <Card className="filter-card border-0">
-                <Card.Body>
-                  <h5 className="card-title filter-header">Sắp xếp theo giá</h5>
-                  <Form>
-                    <div className="mb-3">
-                      <Form.Check
-                        label="Giá tăng dần"
-                        type="radio"
-                        name="sortPrice"
-                        value="asc"
-                        className="mb-2"
-                        onChange={(e) => setSortByPrice(e.target.value)}
-                      />
-                      <Form.Check
-                        label="Giá giảm dần"
-                        type="radio"
-                        name="sortPrice"
-                        value="desc"
-                        className="mb-2"
-                        onChange={(e) => setSortByPrice(e.target.value)}
-                      />
-                    </div>
-                  </Form>
-                </Card.Body>
-              </Card>
-            </div>
-          </Col>
+                        <Form.Check
+                          label="Giá giảm dần"
+                          type="radio"
+                          name="sortPrice"
+                          value="desc"
+                          className="mb-2"
+                          onChange={(e) => setSortByPrice(e.target.value)}
+                        />
+                      </div>
+                    </Form>
+                  </Card.Body>
+                </Card>
+              </div>
+            </Col>
 
-          <Col sm={9}>
-            <Card className="fw-bold fs-3 mb-4">
-              <Card.Body>
-                <Card.Text>
-                  Điện thoại {`(${filteredData.length} sản phẩm)`}
-                </Card.Text>
-              </Card.Body>
-            </Card>
-            <Row xs={1} sm={2} lg={3}>
-              {filteredData?.map((item, i) => (
-                <Col key={i} className="mb-3">
-                  <PhoneCard
-                    smartphone={item}
-                    image={findImg(item.smartphone_id)?.image_url}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Col>
-        </Row>
-      </Container>
-    </div>
+            <Col sm={9}>
+              <Card className="fw-bold fs-3 mb-4">
+                <Card.Body>
+                  <Card.Text>
+                    Điện thoại {`(${filteredData.length} sản phẩm)`}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+              <Row xs={1} sm={2} lg={3}>
+                {filteredData?.map((item, i) => (
+                  <Col key={i} className="mb-3">
+                    <PhoneCard
+                      smartphone={item}
+                      image={findImg(item.smartphone_id)?.image_url}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+      <Footer />
+    </>
   );
 }
 
